@@ -276,14 +276,6 @@ export const query = async (queryString: string) => {
 export const getSearchEntity = async() => {
     // This is an example where for the "full" app we would also include userid or username in the query
     const entities = await client.queryEntities('app="golembase-media_demo" && type="searches"');
-    let result: Searches = {
-        directors: [],
-        artists: [],
-        authors: [],
-        movie_genres: [],
-        music_genres: [],
-        book_genres: []
-    }
     if (entities.length > 0) {
         
         // There should always be exactly one, but just in case...
@@ -294,6 +286,7 @@ export const getSearchEntity = async() => {
 
         console.log(metadata);
 
+        // TODO: Move this to a function and put the mapping functions in their own file
         // Build the search options as a single object
         // Let's use the built in reduce function to transform this into an object
         // (Instead of harcoding "director", "author" etc. That way if we add 

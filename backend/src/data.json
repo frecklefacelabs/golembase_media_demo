@@ -1,6 +1,6 @@
 [
 {
-  "data_value": "A lunar revolution with libertarian flair",
+  "data_value": "BOOK: A lunar revolution with libertarian flair",
   "annotations": {
     "type": "book",
     "title": "The Moon is a Harsh Mistress",
@@ -13,7 +13,7 @@
 },
 
 {
-  "data_value": "A sprawling fantasy of politics and dragons",
+  "data_value": "BOOK: A sprawling fantasy of politics and dragons",
   "annotations": {
     "type": "book",
     "title": "A Game of Thrones",
@@ -26,7 +26,7 @@
 },
 
 {
-  "data_value": "A mind-bending dream within a dream",
+  "data_value": "MOVIE: A mind-bending dream within a dream",
   "annotations": {
     "type": "movie",
     "title": "Inception",
@@ -39,7 +39,7 @@
 },
 
 {
-  "data_value": "Aliens land in Montana and language nerds save the world",
+  "data_value": "MOVIE: Aliens land in Montana and language nerds save the world",
   "annotations": {
     "type": "movie",
     "title": "Arrival",
@@ -52,7 +52,7 @@
 },
 
 {
-  "data_value": "Spacey synth with prog undertones",
+  "data_value": "MUSIC: Spacey synth with prog undertones",
   "annotations": {
     "type": "music",
     "title": "Blade Runner Blues",
@@ -65,7 +65,7 @@
 },
 
 {
-  "data_value": "A funky jam from an intergalactic mothership",
+  "data_value": "MUSIC: A funky jam from an intergalactic mothership",
   "annotations": {
     "type": "music",
     "title": "Mothership Connection",
@@ -78,7 +78,7 @@
 },
 
 {
-  "data_value": "A hacker discovers the world is a simulation",
+  "data_value": "BOOK: A hacker discovers the world is a simulation",
   "annotations": {
     "type": "book",
     "title": "Snow Crash",
@@ -91,7 +91,7 @@
 },
 
 {
-  "data_value": "A detective noir set in a world of talking animals",
+  "data_value": "BOOK: A detective noir set in a world of talking animals",
   "annotations": {
     "type": "book",
     "title": "Gun, with Occasional Music",
@@ -104,7 +104,7 @@
 },
 
 {
-  "data_value": "Time-traveling teen in a DeLorean with wild hair mentor",
+  "data_value": "MOVIE: Time-traveling teen in a DeLorean with wild hair mentor",
   "annotations": {
     "type": "movie",
     "title": "Back to the Future",
@@ -117,7 +117,7 @@
 },
 
 {
-  "data_value": "A dystopian future where style meets surveillance",
+  "data_value": "MOVIE: A dystopian future where style meets surveillance",
   "annotations": {
     "type": "movie",
     "title": "Brazil",
@@ -130,7 +130,7 @@
 },
 
 {
-  "data_value": "Melancholy synthwave soundtrack from a virtual world",
+  "data_value": "MUSIC: Melancholy synthwave soundtrack from a virtual world",
   "annotations": {
     "type": "music",
     "title": "Boys of Summer (Cover)",
@@ -143,7 +143,7 @@
 },
 
 {
-  "data_value": "A prog rock odyssey through time and space",
+  "data_value": "MUSIC: A prog rock odyssey through time and space",
   "annotations": {
     "type": "music",
     "title": "Close to the Edge",
@@ -156,7 +156,7 @@
 },
 
 {
-  "data_value": "Juvenile sci-fi adventure of colonists on Ganymede",
+  "data_value": "BOOK: Juvenile sci-fi adventure of colonists on Ganymede",
   "annotations": {
     "type": "book",
     "title": "Farmer in the Sky",
@@ -169,7 +169,7 @@
 },
 
 {
-  "data_value": "A war-torn sequel with direwolves and betrayal",
+  "data_value": "BOOK: A war-torn sequel with direwolves and betrayal",
   "annotations": {
     "type": "book",
     "title": "A Clash of Kings",
@@ -182,7 +182,7 @@
 },
 
 {
-  "data_value": "The dragons rise, and war rages across Westeros",
+  "data_value": "BOOK: The dragons rise, and war rages across Westeros",
   "annotations": {
     "type": "book",
     "title": "A Storm of Swords",
@@ -195,7 +195,7 @@
 },
 
 {
-  "data_value": "Corporate espionage meets virtual addiction",
+  "data_value": "BOOK: Corporate espionage meets virtual addiction",
   "annotations": {
     "type": "book",
     "title": "Neuromancer",
@@ -208,7 +208,7 @@
 },
 
 {
-  "data_value": "A man with no short-term memory pieces together a murder",
+  "data_value": "MOVIE: A man with no short-term memory pieces together a murder",
   "annotations": {
     "type": "movie",
     "title": "Memento",
@@ -221,7 +221,7 @@
 },
 
 {
-  "data_value": "A 21-minute space opera in musical form",
+  "data_value": "MUSIC: A 21-minute space opera in musical form",
   "annotations": {
     "type": "music",
     "title": "2112",
@@ -234,7 +234,7 @@
 },
 
 {
-  "data_value": "The track that launched a thousand concept albums",
+  "data_value": "MUSIC: The track that launched a thousand concept albums",
   "annotations": {
     "type": "music",
     "title": "Echoes",
@@ -247,7 +247,7 @@
 },
 
 {
-  "data_value": "Poetic balladry with a touch of mysticism",
+  "data_value": "MUSIC: Poetic balladry with a touch of mysticism",
   "annotations": {
     "type": "music",
     "title": "Heart of Gold",
@@ -260,7 +260,7 @@
 },
 
 {
-  "data_value": "A rebel team steals Death Star plans in gritty Star Wars prequel",
+  "data_value": "MOVIE: A rebel team steals Death Star plans in gritty Star Wars prequel",
   "annotations": {
     "type": "movie",
     "title": "Rogue One: A Star Wars Story",

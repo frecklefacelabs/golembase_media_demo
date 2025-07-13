@@ -14,20 +14,27 @@ import {
     NumericAnnotation,
     Annotation
 } from "golem-base-sdk"
-
 import { readFileSync } from "fs";
 import jsonData from './data.json' with { type: 'json' };
+//import { decode } from "punycode";
+
+// TODO: Move this to its own file
+interface QueryResult {
+    key: string;
+    description: string; // Be careful! It's not always a string, but in this app it is.
+}
 
 const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
 
 const keyBytes = readFileSync('./private.key');
+const key: AccountData = new Tagged("privatekey", keyBytes);
+const client = await createClient(1337, key, 'http://localhost:8545', 'ws://localhost:8545');
 
 export const sendSampleData = async () => {
 
-    const key: AccountData = new Tagged("privatekey", keyBytes);
-
-
-    const client = await createClient(1337, key, 'http://localhost:8545', 'ws://localhost:8545');
+    // TODO: Check if sample data already exists by quering the items. Maybe we could query each item individually and only add it if it doesn't already exist...
 
     let creates:GolemBaseCreate[] = [];
 
@@ -61,13 +68,37 @@ export const convertToCreate = (mediaItem: any) => {
             result.stringAnnotations.push(new Annotation(key, value));
         }
         else {
-            result.stringAnnotations.push(new Annotation(key, String(value)));
+            let newValue = String(value);
+            if (String(value).toLowerCase() == 'true') {
+                newValue = 'true';
+            }
+            else if (String(value).toLowerCase() == 'false') {
+                newValue = 'false';
+            }
+            result.stringAnnotations.push(new Annotation(key, newValue));
 
         }
         //console.log(`Annotation ${key}:${value}, type of value; ${typeof(value)}`)
     }
 
     return result;
+}
 
+export const query = async (queryString: string) => {
+    const rawResult: any = await client.queryEntities(queryString);
+    console.log(rawResult);
 
+    // This part is annoying; we have to decode every payload.
+    let result:QueryResult[] = [];
+
+    for (let i=0; i<rawResult.length; i++) {
+        result.push({
+            key: rawResult[i].entityKey,
+            description: decoder.decode(rawResult[i].storageValue)
+        })
+    }
+
+    console.log(result);
+
+    return result;
 }

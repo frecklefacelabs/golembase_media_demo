@@ -17,7 +17,7 @@ let item:any = {
   }
 };
 
-sendSampleData();
+await sendSampleData();
 
 // Basic route
 // app.get('/', (req, res) => {

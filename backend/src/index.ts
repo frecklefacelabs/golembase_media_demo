@@ -50,11 +50,7 @@ app.get('/query', async (req, res) => {
     }
 
 
-    console.log('=============================================');
-    console.log(queryString);
     const result:any = await query(queryString);
-    console.log('=======Back in the express path========')
-    console.log(result);
     res.send(result);
 })
 

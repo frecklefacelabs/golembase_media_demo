@@ -130,18 +130,9 @@ function updateSearchesFromItem(searches: Searches, item: MediaItem): void {
 
 function transformSearchesToKeyValuePairs(searches: Searches): Annotation<string>[] {
     return Object.entries(searches).map(([key, value]) => {
-        let finalKey = key.replace(/_/g, '-'); // turn underscores into dashes
-        let finalValue: string[];
-
-        if (key.endsWith('_genres')) {
-            // Sort genres alphabetically
-            finalValue = [...value].sort((a, b) => a.localeCompare(b));
-        } else {
-            // Keep original order
-            finalValue = value;
-        }
-
-        return new Annotation(key, value.join(','));
+        const finalKey = key; //.replace(/_/g, '-'); // turn underscores into dashes
+        const sortedValues = [...value].sort((a, b) => a.localeCompare(b));
+        return new Annotation(finalKey, sortedValues.join(','));
     });
 }
 
@@ -154,23 +145,10 @@ export const sendSampleData = async () => {
     for (let i = 0; i < jsonData.length; i++) {
         creates.push(convertToCreate(jsonData[i]));
     }
-
     
     // Gather up authors, directors, artists, book-genres, movie-genres, music-genres so we can provide some search dropdowns
-
-    let searches:GolemBaseCreate = {
-        data: encoder.encode("searches"),
-        btl: 25,
-        stringAnnotations: [],
-        numericAnnotations: []
-    };
-
-    let authors:string[] = [];
-    let directors:string[] = [];
-    let artists:string[] = [];
-    let book_genres:string[] = [];
-    let movie_genres:string[] = [];
-    let music_genres:string[] = [];
+    // This will be built into a single entity that we'll also send over.
+    // TODO: Move this to its own function
 
     let searchesTest:Searches = {
         directors: [],
@@ -182,74 +160,20 @@ export const sendSampleData = async () => {
     }
 
     for (let i = 0; i < jsonData.length; i++) {
-
-        // Test
-        //console.log('++++++++++++++++++++++++++++++++++++');
-        //console.log(jsonData[i]);
         updateSearchesFromItem(searchesTest, jsonData[i] as MediaItem);
-
-        // Author/Director/Artist
-        if (jsonData[i]?.type?.toLowerCase() == 'movie' && jsonData[i]?.director) {
-            if (directors.indexOf(jsonData[i].director as string) == -1) {
-                directors.push(jsonData[i].director as string);
-            }
-        }
-        else if (jsonData[i]?.type?.toLowerCase() == 'music' && jsonData[i]?.artist) {
-            if (artists.indexOf(jsonData[i].artist as string) == -1) {
-                artists.push(jsonData[i].artist as string);
-            }
-        }
-        else if (jsonData[i]?.type?.toLowerCase() == 'book' && jsonData[i]?.author) {
-            if (authors.indexOf(jsonData[i].author as string) == -1) {
-                authors.push(jsonData[i].author as string);
-            }
-        }
-
-        // Genres
-        if (jsonData[i]?.type?.toLowerCase() == 'movie' && jsonData[i]?.genre) {
-            if (movie_genres.indexOf((jsonData[i].genre as string).toLowerCase()) == -1) {
-                movie_genres.push((jsonData[i].genre as string).toLowerCase());
-            }
-        }
-        else if (jsonData[i]?.type?.toLowerCase() == 'music' && jsonData[i]?.genre) {
-            if (music_genres.indexOf((jsonData[i].genre as string).toLowerCase()) == -1) {
-                music_genres.push((jsonData[i].genre as string).toLowerCase());
-            }
-        }
-        else if (jsonData[i]?.type?.toLowerCase() == 'book' && jsonData[i]?.genre) {
-            if (book_genres.indexOf((jsonData[i].genre as string).toLowerCase()) == -1) {
-                book_genres.push((jsonData[i].genre as string).toLowerCase());
-            }
-        }
-
     }
 
-    searches.stringAnnotations.push(new Annotation("app", "golembase-media_demo"));
-    searches.stringAnnotations.push(new Annotation("type", "searches"));
-    
-    searches.stringAnnotations.push(new Annotation("directors", directors.join(',')));
-    searches.stringAnnotations.push(new Annotation("artists", artists.join(',')));
-    searches.stringAnnotations.push(new Annotation("authors", authors.join(',')));
-
-    searches.stringAnnotations.push(new Annotation("movie-genres", movie_genres.sort().join(',')));
-    searches.stringAnnotations.push(new Annotation("music-genres", music_genres.sort().join(',')));
-    searches.stringAnnotations.push(new Annotation("book-genres", book_genres.sort().join(',')));
-
-    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-    console.log(searchesTest);
-    console.log(transformSearchesToKeyValuePairs(searchesTest));
-    console.log(searches.stringAnnotations);
-    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
-    let searches2:GolemBaseCreate = {
+    let searches:GolemBaseCreate = {
         data: encoder.encode("searches"),
         btl: 25,
         stringAnnotations: transformSearchesToKeyValuePairs(searchesTest),
         numericAnnotations: []
     };
 
+    searches.stringAnnotations.push(new Annotation("app", "golembase-media_demo"));
+    searches.stringAnnotations.push(new Annotation("type", "searches"));
 
-    creates.push(searches2)
+    creates.push(searches)
 
     const receipts = await client.createEntities(creates);
 

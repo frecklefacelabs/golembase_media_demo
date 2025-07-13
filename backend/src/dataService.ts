@@ -19,16 +19,44 @@ import { readFileSync } from "fs";
 import jsonData from './data.json' with { type: 'json' };
 //import { decode } from "punycode";
 
-// TODO: Move this to its own file
-interface QueryResult {
-    key: string;
-    auto_generated: string;
-    type: string;
-    title: string;
-    description: string;
-    // This next line means we can have any additional properties we want, provided their values are string, or number
-    [key: string]: string | number;
+// TODO: Move interfaces to their own file
+
+type MediaType = "book" | "movie" | "music";
+
+interface Book {
+  type: "book";
+  title: string;
+  description: string;
+  author: string;
+  genre: string;
+  rating: number;
+  owned: boolean;
+  year: number;
 }
+
+interface Movie {
+  type: "movie";
+  title: string;
+  description: string;
+  director: string;
+  genre: string;
+  rating: number;
+  watched: boolean;
+  year: number;
+}
+
+interface Music {
+  type: "music";
+  title: string;
+  description: string;
+  artist: string;
+  genre: string;
+  rating: number;
+  favorite: boolean;
+  year: number;
+}
+
+type MediaItem = Book | Movie | Music;
 
 interface Searches {
     directors: string[];
@@ -39,6 +67,23 @@ interface Searches {
     book_genres: string[];
 }
 
+// Mapping from media type to the person + genre keys. This way we can add additional media types later on without having to make major rewrites
+const MEDIA_MAP: Record<MediaType, { personKey: keyof Searches; genreKey: keyof Searches; sourcePersonField: string }> = {
+  book: { personKey: "authors", genreKey: "book_genres", sourcePersonField: "author" },
+  movie: { personKey: "directors", genreKey: "movie_genres", sourcePersonField: "director" },
+  music: { personKey: "artists", genreKey: "music_genres", sourcePersonField: "artist" },
+};
+
+interface QueryResult {
+    key: string;
+    auto_generated: string;
+    type: string;
+    title: string;
+    description: string;
+    // This next line means we can have any additional properties we want, provided their values are string, or number
+    [key: string]: string | number;
+}
+
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
@@ -46,6 +91,59 @@ const decoder = new TextDecoder();
 const keyBytes = readFileSync('./private.key');
 const key: AccountData = new Tagged("privatekey", keyBytes);
 const client = await createClient(1337, key, 'http://localhost:8545', 'ws://localhost:8545');
+
+
+// This takes an existing Searches (a set of lists), and adds in additional items, but checks for existence first, and only adds if they aren't already there
+// We also use the above so we're not hardcoding "director" "movie_genre" etc. in case we want to add additional media types later.
+function updateSearchesFromItem(searches: Searches, item: MediaItem): void {
+
+    if (!item || !item.type) {
+        return; // invalid data, skip
+    }
+
+    const map = MEDIA_MAP[item.type];
+
+    if (!map) {
+        return; // invalid data, skip
+    }
+
+    const personValue: string = (item as any)[map.sourcePersonField];
+    const genreValue: string = item.genre;
+
+    const personList = searches[map.personKey] as string[];
+    const genreList = searches[map.genreKey];
+
+    // Normalize for comparison
+    const personValueLower = personValue.toLowerCase();
+    const genreValueLower = genreValue.toLowerCase();
+
+    // Case-insensitive check for person
+    if (!personList.some(p => p.toLowerCase() === personValueLower)) {
+        personList.push(personValue);
+    }
+
+    // Case-insensitive check for genre
+    if (!genreList.some(g => g.toLowerCase() === genreValueLower)) {
+        genreList.push(genreValue);
+    }
+}
+
+function transformSearchesToKeyValuePairs(searches: Searches): Annotation<string>[] {
+    return Object.entries(searches).map(([key, value]) => {
+        let finalKey = key.replace(/_/g, '-'); // turn underscores into dashes
+        let finalValue: string[];
+
+        if (key.endsWith('_genres')) {
+            // Sort genres alphabetically
+            finalValue = [...value].sort((a, b) => a.localeCompare(b));
+        } else {
+            // Keep original order
+            finalValue = value;
+        }
+
+        return new Annotation(key, value.join(','));
+    });
+}
 
 export const sendSampleData = async () => {
 
@@ -74,7 +172,21 @@ export const sendSampleData = async () => {
     let movie_genres:string[] = [];
     let music_genres:string[] = [];
 
+    let searchesTest:Searches = {
+        directors: [],
+        artists: [],
+        authors: [],
+        movie_genres: [],
+        music_genres: [],
+        book_genres: []
+    }
+
     for (let i = 0; i < jsonData.length; i++) {
+
+        // Test
+        //console.log('++++++++++++++++++++++++++++++++++++');
+        //console.log(jsonData[i]);
+        updateSearchesFromItem(searchesTest, jsonData[i] as MediaItem);
 
         // Author/Director/Artist
         if (jsonData[i]?.type?.toLowerCase() == 'movie' && jsonData[i]?.director) {
@@ -123,7 +235,21 @@ export const sendSampleData = async () => {
     searches.stringAnnotations.push(new Annotation("music-genres", music_genres.sort().join(',')));
     searches.stringAnnotations.push(new Annotation("book-genres", book_genres.sort().join(',')));
 
-    creates.push(searches)
+    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+    console.log(searchesTest);
+    console.log(transformSearchesToKeyValuePairs(searchesTest));
+    console.log(searches.stringAnnotations);
+    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+
+    let searches2:GolemBaseCreate = {
+        data: encoder.encode("searches"),
+        btl: 25,
+        stringAnnotations: transformSearchesToKeyValuePairs(searchesTest),
+        numericAnnotations: []
+    };
+
+
+    creates.push(searches2)
 
     const receipts = await client.createEntities(creates);
 
@@ -242,8 +368,12 @@ export const getSearchEntity = async() => {
         // Grab the metadata
         const metadata = await client.getEntityMetaData(search_hash);
 
+        console.log(metadata);
+
         // Build the search options as a single object
         // Let's use the built in reduce function to transform this into an object
+        // (Instead of harcoding "director", "author" etc. That way if we add 
+        // Additional media types later on, we won't have to change this code.)
         const output = metadata.stringAnnotations.reduce(
             (acc, {key, value}) => {
                 // Skip the app and type annotations but include all the rest

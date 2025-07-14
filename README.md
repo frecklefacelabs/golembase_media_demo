@@ -94,8 +94,11 @@ Result:
 Now go to Postman and try adding a book:
 
 Method: POST
+
 URL: localhost:3000/save-new
+
 Body/JSON:
+
 ```json
 {
     "type": "book",

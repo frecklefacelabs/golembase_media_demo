@@ -1,8 +1,13 @@
 import express from 'express';
 import { sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, MediaItem, Searches } from './dataService.js';
-
+import cors from 'cors';
 const app = express();
 const port = 3000;
+
+const corsOptions = {
+  origin: 'http://localhost:4200' 
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 

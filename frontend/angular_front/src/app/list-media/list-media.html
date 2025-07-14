@@ -1,0 +1,18 @@
+<p>list-media works!</p>
+<div class="container">
+
+	@for (mediaItem of mediaList(); track mediaItem.key) {
+		@switch (mediaItem.type) {
+			@case ('book') {
+				<app-show-book [book]="mediaItem" />
+			}
+			@case ('music') {
+				<app-show-music />
+			}
+			@case ('movie') {
+				<app-show-movie />
+			}
+		}
+	}
+
+</div>

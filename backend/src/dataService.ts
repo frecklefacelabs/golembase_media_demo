@@ -10,6 +10,8 @@ import {
     AccountData,
     Tagged,
     type GolemBaseCreate,
+    type GolemBaseUpdate,
+    type GolemBaseTransaction,
     StringAnnotation,
     NumericAnnotation,
     Annotation,
@@ -21,9 +23,9 @@ import jsonData from './data.json' with { type: 'json' };
 
 // TODO: Move interfaces to their own file
 
-type MediaType = "book" | "movie" | "music";
+export type MediaType = "book" | "movie" | "music";
 
-interface Book {
+export interface Book {
   type: "book";
   title: string;
   description: string;
@@ -34,7 +36,7 @@ interface Book {
   year: number;
 }
 
-interface Movie {
+export interface Movie {
   type: "movie";
   title: string;
   description: string;
@@ -45,7 +47,7 @@ interface Movie {
   year: number;
 }
 
-interface Music {
+export interface Music {
   type: "music";
   title: string;
   description: string;
@@ -56,9 +58,10 @@ interface Music {
   year: number;
 }
 
-type MediaItem = Book | Movie | Music;
+export type MediaItem = Book | Movie | Music;
 
 interface Searches {
+    entityKey?: Hex; 
     directors: string[];
     artists: string[];
     authors: string[];
@@ -111,7 +114,7 @@ function updateSearchesFromItem(searches: Searches, item: MediaItem): void {
     const genreValue: string = item.genre;
 
     const personList = searches[map.personKey] as string[];
-    const genreList = searches[map.genreKey];
+    const genreList = searches[map.genreKey] as string[];
 
     // Normalize for comparison
     const personValueLower = personValue.toLowerCase();
@@ -128,7 +131,7 @@ function updateSearchesFromItem(searches: Searches, item: MediaItem): void {
     }
 }
 
-function transformSearchesToKeyValuePairs(searches: Searches): Annotation<string>[] {
+function transformSearchesToKeyValuePairs(searches: Omit<Searches, 'entityKey'>): Annotation<string>[] {
     return Object.entries(searches).map(([key, value]) => {
         const finalKey = key; //.replace(/_/g, '-'); // turn underscores into dashes
         const sortedValues = [...value].sort((a, b) => a.localeCompare(b));
@@ -180,6 +183,44 @@ export const sendSampleData = async () => {
     console.log(receipts);
 
     return 10;
+}
+
+// Add Entity
+
+export const addMediaItem = async (mediaItem: MediaItem) => {
+    // Convert to a CreateEntity item
+    let creates:GolemBaseCreate[] = [];
+
+    // TODO: Verify schema
+    creates.push(convertToCreate(mediaItem));
+
+    // Grab the current Searches entity
+
+    let searches:Searches = await getSearchEntity();
+
+    // Add in the people and genres
+
+    updateSearchesFromItem(searches, mediaItem);
+
+    // Create an Update with the Searches entity
+    // TODO: Move this into its own function
+    const entityKey = searches.entityKey;
+    delete searches.entityKey;
+    let updates:GolemBaseUpdate[] = [{
+        entityKey: entityKey as Hex,
+        data: encoder.encode('searches'),
+        btl: 25,
+        stringAnnotations: transformSearchesToKeyValuePairs(searches),
+        numericAnnotations: []
+
+    }];
+    updates[0].stringAnnotations.push(new Annotation("app", "golembase-media_demo"));
+    updates[0].stringAnnotations.push(new Annotation("type", "searches"));
+
+    // Send both the Create and the Update as a single transaction
+    const receipt = await client.sendTransaction(creates, updates, [], []);
+    console.log(receipt);
+
 }
 
 export const convertToCreate = (mediaItem: any) => {
@@ -273,7 +314,7 @@ export const query = async (queryString: string) => {
     return result;
 }
 
-export const getSearchEntity = async() => {
+export const getSearchEntity = async(): Promise<Searches> => {
     // This is an example where for the "full" app we would also include userid or username in the query
     const entities = await client.queryEntities('app="golembase-media_demo" && type="searches"');
     if (entities.length > 0) {
@@ -291,7 +332,7 @@ export const getSearchEntity = async() => {
         // Let's use the built in reduce function to transform this into an object
         // (Instead of harcoding "director", "author" etc. That way if we add 
         // Additional media types later on, we won't have to change this code.)
-        const output = metadata.stringAnnotations.reduce(
+        const output:Searches = metadata.stringAnnotations.reduce(
             (acc, {key, value}) => {
                 // Skip the app and type annotations but include all the rest
                 if (key == "app" || key == "type") {
@@ -301,13 +342,15 @@ export const getSearchEntity = async() => {
                 return acc;
             },
             {} as Record<string, string[]>
-        );
+        ) as unknown as Searches; // Those are just to get the TS compiler to shut up ;-)
+
+        output.entityKey = search_hash;
 
         console.log(output);
         return output;
 
     }
-    return {};
+    return {} as Searches; // Again, to get TS to quiet down
 }
 
 export const getMetadata = async(hash: Hex) => {

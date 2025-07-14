@@ -1,5 +1,5 @@
 import express from 'express';
-import { sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, MediaItem } from './dataService.js';
+import { sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, MediaItem, Searches } from './dataService.js';
 
 const app = express();
 const port = 3000;
@@ -10,15 +10,27 @@ app.get('/', (req, res) => {
     res.send('Hello from Golem-base!');
 });
 
+// Pre-load sample data
 app.get('/load-data', async (req, res) => {
     // Add try-catch and send a simple message about not having enough funds
     await sendSampleData()
     res.send('OK');
 });
 
+// Save a new media item
 app.post('/save-new', async (req, res) => {
+    // TODO: Verify data before blindly sending it
     console.log(req.body);
-    res.send('OK');
+    let result: any = await addMediaItem(req.body);
+    res.send(result);
+});
+
+// This can be used to populate dropdown boxes for searches
+app.get('/search-options', async (req, res) => {
+    let searches:Searches = await getSearchEntity();
+    delete searches.entityKey;
+
+    res.send(searches);
 });
 
 // TODO: Really we need to just accept an incoming query string in case they need "OR" clauses...
@@ -66,7 +78,18 @@ app.get('/test', async (req, res) => {
 
 app.get('/test2', async(req, res) => {
 
-    let newData: MediaItem = {
+    let newData: MediaItem = 
+    {
+        "type": "book",
+        "title": "The Moon is a Harsh Mistress",
+        "description": "A lunar revolution with libertarian flair",
+        "author": "Robert A. Heinlein",
+        "genre": "sci-fi",
+        "rating": 5,
+        "owned": true,
+        "year": 1966
+    };
+    /*{
         "type": "book",
         "title": "Farmer in the Sky",
         "description": "Juvenile sci-fi adventure of colonists on Ganymede",
@@ -75,7 +98,7 @@ app.get('/test2', async(req, res) => {
         "rating": 4,
         "owned": false,
         "year": 1950
-    };
+    };*/
 
     console.log('Calling addMediaItem...');
 

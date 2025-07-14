@@ -60,7 +60,7 @@ export interface Music {
 
 export type MediaItem = Book | Movie | Music;
 
-interface Searches {
+export interface Searches {
     entityKey?: Hex; 
     directors: string[];
     artists: string[];
@@ -143,6 +143,12 @@ export const sendSampleData = async () => {
 
     // TODO: Check if sample data already exists by quering the items. Maybe we could query each item individually and only add it if it doesn't already exist...
 
+    // TODO: This step is optional, but it creates the important searches entity.
+    // Instead, when the app starts, let's check if the searches entity exists, and if not create it.
+    // Then here in this function, don't create it; instead update it.
+    // (That means it will share code with addMediaItem, in which case let's move it to its own function.)
+    // (It also means we need to update this function to call a transaction with both CREATE and UPDATE.)
+
     let creates:GolemBaseCreate[] = [];
 
     for (let i = 0; i < jsonData.length; i++) {
@@ -220,6 +226,7 @@ export const addMediaItem = async (mediaItem: MediaItem) => {
     // Send both the Create and the Update as a single transaction
     const receipt = await client.sendTransaction(creates, updates, [], []);
     console.log(receipt);
+    return receipt; // For now we'll just return the receipt; probably need to clean it up into a more user-friendly struct
 
 }
 

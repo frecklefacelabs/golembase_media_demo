@@ -1,275 +1,201 @@
 [
+
 {
-  "data_value": "A lunar revolution with libertarian flair",
-  "annotations": {
-    "type": "book",
-    "title": "The Moon is a Harsh Mistress",
-    "author": "Robert A. Heinlein",
-    "genre": "sci-fi",
-    "rating": 5,
-    "owned": true,
-    "year": 1966
-  }
+  "type": "book",
+  "title": "A Game of Thrones",
+  "description": "A sprawling fantasy of politics and dragons",
+  "author": "George R. R. Martin",
+  "genre": "fantasy",
+  "rating": 4,
+  "owned": false,
+  "year": 1996
 },
 
 {
-  "data_value": "A sprawling fantasy of politics and dragons",
-  "annotations": {
-    "type": "book",
-    "title": "A Game of Thrones",
-    "author": "George R. R. Martin",
-    "genre": "fantasy",
-    "rating": 4,
-    "owned": false,
-    "year": 1996
-  }
+  "type": "movie",
+  "title": "Inception",
+  "description": "A mind-bending dream within a dream",
+  "director": "Christopher Nolan",
+  "genre": "sci-fi",
+  "rating": 5,
+  "watched": true,
+  "year": 2010
 },
 
 {
-  "data_value": "A mind-bending dream within a dream",
-  "annotations": {
-    "type": "movie",
-    "title": "Inception",
-    "director": "Christopher Nolan",
-    "genre": "sci-fi",
-    "rating": 5,
-    "watched": true,
-    "year": 2010
-  }
+  "type": "movie",
+  "title": "Arrival",
+  "description": "Aliens land in Montana and language nerds save the world",
+  "director": "Denis Villeneuve",
+  "genre": "sci-fi",
+  "rating": 5,
+  "watched": false,
+  "year": 2016
 },
 
 {
-  "data_value": "Aliens land in Montana and language nerds save the world",
-  "annotations": {
-    "type": "movie",
-    "title": "Arrival",
-    "director": "Denis Villeneuve",
-    "genre": "sci-fi",
-    "rating": 5,
-    "watched": false,
-    "year": 2016
-  }
+  "type": "music",
+  "title": "Blade Runner Blues",
+  "description": "Spacey synth with prog undertones",
+  "artist": "Vangelis",
+  "genre": "ambient",
+  "rating": 5,
+  "favorite": true,
+  "year": 1982
 },
 
 {
-  "data_value": "Spacey synth with prog undertones",
-  "annotations": {
-    "type": "music",
-    "title": "Blade Runner Blues",
-    "artist": "Vangelis",
-    "genre": "ambient",
-    "rating": 5,
-    "favorite": true,
-    "year": 1982
-  }
+  "type": "music",
+  "title": "Mothership Connection",
+  "description": "A funky jam from an intergalactic mothership",
+  "artist": "Parliament",
+  "genre": "funk",
+  "rating": 4,
+  "favorite": false,
+  "year": 1975
 },
 
 {
-  "data_value": "A funky jam from an intergalactic mothership",
-  "annotations": {
-    "type": "music",
-    "title": "Mothership Connection",
-    "artist": "Parliament",
-    "genre": "funk",
-    "rating": 4,
-    "favorite": false,
-    "year": 1975
-  }
+  "type": "book",
+  "title": "Snow Crash",
+  "description": "A hacker discovers the world is a simulation",
+  "author": "Neal Stephenson",
+  "genre": "cyberpunk",
+  "rating": 4,
+  "owned": true,
+  "year": 1992
 },
 
 {
-  "data_value": "A hacker discovers the world is a simulation",
-  "annotations": {
-    "type": "book",
-    "title": "Snow Crash",
-    "author": "Neal Stephenson",
-    "genre": "cyberpunk",
-    "rating": 4,
-    "owned": true,
-    "year": 1992
-  }
+  "type": "movie",
+  "title": "Back to the Future",
+  "description": "Time-traveling teen in a DeLorean with wild hair mentor",
+  "director": "Robert Zemeckis",
+  "genre": "sci-fi",
+  "rating": 5,
+  "watched": true,
+  "year": 1985
 },
 
 {
-  "data_value": "A detective noir set in a world of talking animals",
-  "annotations": {
-    "type": "book",
-    "title": "Gun, with Occasional Music",
-    "author": "Jonathan Lethem",
-    "genre": "speculative",
-    "rating": 3,
-    "owned": false,
-    "year": 1994
-  }
+  "type": "movie",
+  "title": "Brazil",
+  "description": "A dystopian future where style meets surveillance",
+  "director": "Terry Gilliam",
+  "genre": "dystopian",
+  "rating": 4,
+  "watched": false,
+  "year": 1985
 },
 
 {
-  "data_value": "Time-traveling teen in a DeLorean with wild hair mentor",
-  "annotations": {
-    "type": "movie",
-    "title": "Back to the Future",
-    "director": "Robert Zemeckis",
-    "genre": "sci-fi",
-    "rating": 5,
-    "watched": true,
-    "year": 1985
-  }
+  "type": "music",
+  "title": "Boys of Summer (Cover)",
+  "description": "Melancholy synthwave soundtrack from a virtual world",
+  "artist": "The Midnight",
+  "genre": "synthwave",
+  "rating": 4,
+  "favorite": true,
+  "year": 2017
 },
 
 {
-  "data_value": "A dystopian future where style meets surveillance",
-  "annotations": {
-    "type": "movie",
-    "title": "Brazil",
-    "director": "Terry Gilliam",
-    "genre": "dystopian",
-    "rating": 4,
-    "watched": false,
-    "year": 1985
-  }
+  "type": "music",
+  "title": "Close to the Edge",
+  "description": "A prog rock odyssey through time and space",
+  "artist": "Yes",
+  "genre": "prog rock",
+  "rating": 5,
+  "favorite": true,
+  "year": 1972
 },
 
 {
-  "data_value": "Melancholy synthwave soundtrack from a virtual world",
-  "annotations": {
-    "type": "music",
-    "title": "Boys of Summer (Cover)",
-    "artist": "The Midnight",
-    "genre": "synthwave",
-    "rating": 4,
-    "favorite": true,
-    "year": 2017
-  }
+  "type": "book",
+  "title": "A Clash of Kings",
+  "description": "A war-torn sequel with direwolves and betrayal",
+  "author": "George R. R. Martin",
+  "genre": "fantasy",
+  "rating": 4,
+  "owned": true,
+  "year": 1998
 },
 
 {
-  "data_value": "A prog rock odyssey through time and space",
-  "annotations": {
-    "type": "music",
-    "title": "Close to the Edge",
-    "artist": "Yes",
-    "genre": "prog rock",
-    "rating": 5,
-    "favorite": true,
-    "year": 1972
-  }
+  "type": "book",
+  "title": "A Storm of Swords",
+  "description": "The dragons rise, and war rages across Westeros",
+  "author": "George R. R. Martin",
+  "genre": "fantasy",
+  "rating": 5,
+  "owned": true,
+  "year": 2000
 },
 
 {
-  "data_value": "Juvenile sci-fi adventure of colonists on Ganymede",
-  "annotations": {
-    "type": "book",
-    "title": "Farmer in the Sky",
-    "author": "Robert A. Heinlein",
-    "genre": "science fiction",
-    "rating": 4,
-    "owned": false,
-    "year": 1950
-  }
+  "type": "book",
+  "title": "Neuromancer",
+  "description": "Corporate espionage meets virtual addiction",
+  "author": "William Gibson",
+  "genre": "cyberpunk",
+  "rating": 5,
+  "owned": true,
+  "year": 1984
 },
 
 {
-  "data_value": "A war-torn sequel with direwolves and betrayal",
-  "annotations": {
-    "type": "book",
-    "title": "A Clash of Kings",
-    "author": "George R. R. Martin",
-    "genre": "fantasy",
-    "rating": 4,
-    "owned": true,
-    "year": 1998
-  }
+  "type": "movie",
+  "title": "Memento",
+  "description": "A man with no short-term memory pieces together a murder",
+  "director": "Christopher Nolan",
+  "genre": "thriller",
+  "rating": 5,
+  "watched": true,
+  "year": 2000
 },
 
 {
-  "data_value": "The dragons rise, and war rages across Westeros",
-  "annotations": {
-    "type": "book",
-    "title": "A Storm of Swords",
-    "author": "George R. R. Martin",
-    "genre": "fantasy",
-    "rating": 5,
-    "owned": true,
-    "year": 2000
-  }
+  "type": "music",
+  "title": "2112",
+  "description": "A 21-minute space opera in musical form",
+  "artist": "Rush",
+  "genre": "prog rock",
+  "rating": 5,
+  "favorite": true,
+  "year": 1976
 },
 
 {
-  "data_value": "Corporate espionage meets virtual addiction",
-  "annotations": {
-    "type": "book",
-    "title": "Neuromancer",
-    "author": "William Gibson",
-    "genre": "cyberpunk",
-    "rating": 5,
-    "owned": true,
-    "year": 1984
-  }
+  "type": "music",
+  "title": "Echoes",
+  "description": "The track that launched a thousand concept albums",
+  "artist": "Pink Floyd",
+  "genre": "prog rock",
+  "rating": 5,
+  "favorite": true,
+  "year": 1971
 },
 
 {
-  "data_value": "A man with no short-term memory pieces together a murder",
-  "annotations": {
-    "type": "movie",
-    "title": "Memento",
-    "director": "Christopher Nolan",
-    "genre": "thriller",
-    "rating": 5,
-    "watched": true,
-    "year": 2000
-  }
+  "type": "music",
+  "title": "Heart of Gold",
+  "description": "Poetic balladry with a touch of mysticism",
+  "artist": "Neil Young",
+  "genre": "folk",
+  "rating": 4,
+  "favorite": false,
+  "year": 1972
 },
 
 {
-  "data_value": "A 21-minute space opera in musical form",
-  "annotations": {
-    "type": "music",
-    "title": "2112",
-    "artist": "Rush",
-    "genre": "prog rock",
-    "rating": 5,
-    "favorite": true,
-    "year": 1976
-  }
-},
-
-{
-  "data_value": "The track that launched a thousand concept albums",
-  "annotations": {
-    "type": "music",
-    "title": "Echoes",
-    "artist": "Pink Floyd",
-    "genre": "prog rock",
-    "rating": 5,
-    "favorite": true,
-    "year": 1971
-  }
-},
-
-{
-  "data_value": "Poetic balladry with a touch of mysticism",
-  "annotations": {
-    "type": "music",
-    "title": "Heart of Gold",
-    "artist": "Neil Young",
-    "genre": "folk",
-    "rating": 4,
-    "favorite": false,
-    "year": 1972
-  }
-},
-
-{
-  "data_value": "A rebel team steals Death Star plans in gritty Star Wars prequel",
-  "annotations": {
-    "type": "movie",
-    "title": "Rogue One: A Star Wars Story",
-    "director": "Gareth Edwards",
-    "genre": "sci-fi",
-    "rating": 4,
-    "watched": true,
-    "year": 2016
-  }
+  "type": "movie",
+  "title": "Rogue One: A Star Wars Story",
+  "description": "A rebel team steals Death Star plans in gritty Star Wars prequel",
+  "director": "Gareth Edwards",
+  "genre": "sci-fi",
+  "rating": 4,
+  "watched": true,
+  "year": 2016
 }
 
 ]

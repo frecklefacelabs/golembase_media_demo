@@ -1,6 +1,7 @@
 import express from 'express';
-import { sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, MediaItem, Searches } from './dataService.js';
+import { sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, MediaItem, Searches, getItemByEntityKey } from './dataService.js';
 import cors from 'cors';
+import { Hex } from 'golem-base-sdk';
 const app = express();
 const port = 3000;
 
@@ -74,6 +75,21 @@ app.get('/query', async (req, res) => {
 
     const result:any = await query(queryString);
     res.send(result);
+})
+
+app.get('/key/:id', async (req, res) => {
+
+    let id:string = req.params.id;
+
+    // Prepend '0x' if it's missing
+    if (!id.startsWith('0x')) {
+        id = '0x' + id;
+        console.log('Updated id with 0x:', id);
+    }
+    
+    console.log('Loading by key!');
+    console.log('id is:', req.params.id);
+    res.send(await getItemByEntityKey(req.params.id as Hex));
 })
 
 app.get('/test', async (req, res) => {

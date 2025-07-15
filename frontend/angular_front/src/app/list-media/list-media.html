@@ -1,5 +1,6 @@
-<p>list-media works!</p>
 <div class="container">
+
+	<h1>Welcome to your Media Library</h1>
 
 	@for (mediaItem of mediaList(); track mediaItem.key) {
 		@switch (mediaItem.type) {
@@ -7,10 +8,10 @@
 				<app-show-book [book]="mediaItem" />
 			}
 			@case ('music') {
-				<app-show-music />
+				<app-show-music [music]="mediaItem"/>
 			}
 			@case ('movie') {
-				<app-show-movie />
+				<app-show-movie [movie]="mediaItem"/>
 			}
 		}
 	}

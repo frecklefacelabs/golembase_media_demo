@@ -1,2 +1,1 @@
-<p>show-book works!</p>
-<div>{{ book().title }}</div>
+<div><a [routerLink]="['/book', book().key]" [state]="{ data: book() }">{{ book().title }}</a> (book by {{ book().author }})</div>

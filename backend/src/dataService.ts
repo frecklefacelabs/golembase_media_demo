@@ -273,7 +273,9 @@ export const convertToCreate = (mediaItem: any) => {
 export const getItemByEntityKey = async (hash: Hex) => {
     const metadata: any = await client.getEntityMetaData(hash);
 
-    let result:any = {};
+    let result:any = {
+        key: hash
+    };
 
     for (let i=0; i<metadata.stringAnnotations.length; i++) {
         const key = metadata.stringAnnotations[i].key;

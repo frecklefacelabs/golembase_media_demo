@@ -1,1 +1,61 @@
-/* You can add global styles to this file, and also import other style files */
+/*
+  Base styles for all action buttons
+*/
+.action-button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff; /* A nice, standard blue */
+  text-align: center;
+  text-decoration: none; /* Removes underline from <a> tags */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+}
+
+/*
+  Hover effect for the primary button
+*/
+.action-button:hover {
+  background-color: #0056b3; /* A darker blue on hover */
+}
+
+/*
+  A subtle "press down" effect when clicking
+*/
+.action-button:active {
+  transform: translateY(1px);
+}
+
+/*
+  A secondary style for "Cancel" or less important buttons
+*/
+.action-button.secondary {
+  background-color: #6c757d; /* A neutral gray */
+}
+
+.action-button.secondary:hover {
+  background-color: #5a6268; /* A darker gray on hover */
+}
+
+/*
+  Style for when the button is disabled
+*/
+.action-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/*
+  A container to group the buttons and add some space
+*/
+.button-group {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}

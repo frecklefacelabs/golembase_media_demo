@@ -1,0 +1,35 @@
+@if (book(); as currentBook) {
+  <h2>Editing: {{ currentBook.title }}</h2>
+
+  <form [formGroup]="editForm" (ngSubmit)="save()">
+    <div class="details-grid">
+      <div class="grid-label">Title</div>
+      <input formControlName="title" />
+
+      <div class="grid-label">Author</div>
+      <input formControlName="author" />
+
+      <div class="grid-label">Description</div>
+      <textarea formControlName="description" rows="5"></textarea>
+
+      <div class="grid-label">Genre</div>
+      <input formControlName="genre" />
+
+      <div class="grid-label">Rating</div>
+      <input formControlName="rating" type="number" />
+
+      <div class="grid-label">Owned</div>
+      <input formControlName="owned" type="checkbox" />
+
+      <div class="grid-label">Year</div>
+      <input formControlName="year" type="number" />
+    </div>
+
+    <div class="button-group">
+      <button type="button" class="action-button secondary" (click)="cancel()">Cancel</button>
+      <button type="submit" class="action-button" [disabled]="!editForm.valid">Save</button>
+    </div>
+  </form>
+} @else {
+  <div>Loading editor...</div>
+}

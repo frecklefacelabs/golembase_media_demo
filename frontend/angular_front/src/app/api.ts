@@ -11,6 +11,10 @@ export class Api {
 
     constructor (private http: HttpClient) { }
 
+    getByKey(key: string): Observable<MediaItem> {
+        return this.http.get<MediaItem>(`${this.apiUrl}/key/${key}`);
+    }
+
     getAll(): Observable<MediaItem[]> {
         return this.http.get<MediaItem[]>(`${this.apiUrl}/query`);
     }

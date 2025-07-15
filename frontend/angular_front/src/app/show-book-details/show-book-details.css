@@ -1,0 +1,16 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+td:first-child {
+  font-weight: bold;
+  width: 120px; /* Adjust width as needed */
+}
+

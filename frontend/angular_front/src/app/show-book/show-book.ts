@@ -1,16 +1,17 @@
 import { Component, input } from '@angular/core';
 import { Book } from '../media';
 import { Api } from '../api';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-show-book',
-    imports: [],
+    imports: [RouterLink],
     templateUrl: './show-book.html',
     styleUrl: './show-book.css'
 })
 export class ShowBook {
 
-    public book = input.required<Book>(); // New style input!
+    public book = input.required<Book>(); // New type of input!
 
     constructor(private apiService: Api) {}
 

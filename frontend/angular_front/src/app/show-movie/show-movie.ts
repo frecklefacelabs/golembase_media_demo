@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { Movie } from '../media';
+import { Api } from '../api';
 
 @Component({
   selector: 'app-show-movie',
@@ -8,4 +10,7 @@ import { Component } from '@angular/core';
 })
 export class ShowMovie {
 
+    public movie = input.required<Movie>(); // New type of input!
+
+    constructor(private apiService: Api) {}
 }

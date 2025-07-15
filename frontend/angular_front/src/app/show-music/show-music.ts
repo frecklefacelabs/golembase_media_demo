@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { Api } from '../api';
+import { Music } from '../media';
 
 @Component({
   selector: 'app-show-music',
@@ -8,4 +10,8 @@ import { Component } from '@angular/core';
 })
 export class ShowMusic {
 
-}
+    public music = input.required<Music>(); // New type of input!
+
+    constructor(private apiService: Api) {}
+  
+  }

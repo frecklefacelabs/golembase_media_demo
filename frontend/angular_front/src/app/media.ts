@@ -48,3 +48,12 @@ export interface Music extends MusicCreate {
 }
 
 export type MediaItem = Book | Movie | Music;
+
+export interface SearchOptions {
+  directors: string[];
+  artists: string[];
+  authors: string[];
+  movie_genres: string[];
+  music_genres: string[];
+  book_genres: string[];
+}

@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MediaItem, Book, Movie, Music } from './media';
+import { MediaItem, Book, Movie, Music, SearchOptions } from './media';
 
 @Injectable({
   providedIn: 'root'
@@ -31,12 +31,16 @@ export class Api {
         return this.http.get<Movie[]>(`${this.apiUrl}/query?type=movies`);
     }
     
-    /**
-     * POST request to create a new book.
-     * @param postData The data for the new book.
-     * @returns An Observable of the created Book.
-     */
-    createBook(postData: Book): Observable<Book> {
-        return this.http.post<Book>(`${this.apiUrl}/posts`, postData);
+    getSearchOptions(): Observable<SearchOptions> {
+        return this.http.get<SearchOptions>(`${this.apiUrl}/search-options`);
+    }
+
+    executeQuery(query: string): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/query?${query}`);
+    }
+
+    save(item: MediaItem): Observable<any> {
+        // This will POST the complete object to a /media endpoint
+        return this.http.post<any>(`${this.apiUrl}/save-new`, item);
     }
 }

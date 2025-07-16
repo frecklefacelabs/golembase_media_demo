@@ -5,10 +5,11 @@ import { isNgContainer } from '@angular/compiler';
 import { ShowBook } from '../show-book/show-book'
 import { ShowMusic } from '../show-music/show-music'
 import { ShowMovie } from '../show-movie/show-movie'
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-list-media',
-  imports: [ ShowBook, ShowMusic, ShowMovie],
+  imports: [ ShowBook, ShowMusic, ShowMovie, RouterLink],
   templateUrl: './list-media.html',
   styleUrl: './list-media.css'
 })

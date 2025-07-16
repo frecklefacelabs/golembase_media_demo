@@ -19,7 +19,8 @@ import {
 } from "golem-base-sdk"
 import { readFileSync } from "fs";
 import jsonData from './data.json' with { type: 'json' };
-//import { decode } from "punycode";
+
+const GOLEM_BASE_APP_NAME = 'golembase-media_demo_v0.5';
 
 // TODO: Move interfaces to their own file
 
@@ -179,7 +180,7 @@ export const sendSampleData = async () => {
         numericAnnotations: []
     };
 
-    searches.stringAnnotations.push(new Annotation("app", "golembase-media_demo"));
+    searches.stringAnnotations.push(new Annotation("app", GOLEM_BASE_APP_NAME));
     searches.stringAnnotations.push(new Annotation("type", "searches"));
 
     creates.push(searches)
@@ -210,6 +211,7 @@ export const addMediaItem = async (mediaItem: MediaItem) => {
 
     // Create an Update with the Searches entity
     // TODO: Move this into its own function
+    // TODO: I'm already omitting entityKey in the transform function, so no reason for this
     const entityKey = searches.entityKey;
     delete searches.entityKey;
     let updates:GolemBaseUpdate[] = [{
@@ -220,7 +222,7 @@ export const addMediaItem = async (mediaItem: MediaItem) => {
         numericAnnotations: []
 
     }];
-    updates[0].stringAnnotations.push(new Annotation("app", "golembase-media_demo"));
+    updates[0].stringAnnotations.push(new Annotation("app", GOLEM_BASE_APP_NAME));
     updates[0].stringAnnotations.push(new Annotation("type", "searches"));
 
     // Send both the Create and the Update as a single transaction
@@ -234,13 +236,15 @@ export const convertToCreate = (mediaItem: any) => {
 
     // Construct the data value from the type, name, and description
 
+    // TODO: Add in the auto_generated part... Or remove it completely?
+
     const data_value:any = `${mediaItem?.type?.toUpperCase()}: ${mediaItem?.title} - ${mediaItem?.description}`;
     console.log(data_value);
 
     let result:GolemBaseCreate = {
         data: data_value,
         btl: 25,
-        stringAnnotations: [new Annotation("app", "golembase-media_demo")],
+        stringAnnotations: [new Annotation("app", GOLEM_BASE_APP_NAME)],
         numericAnnotations: []
     };
 
@@ -325,7 +329,7 @@ export const query = async (queryString: string) => {
 
 export const getSearchEntity = async(): Promise<Searches> => {
     // This is an example where for the "full" app we would also include userid or username in the query
-    const entities = await client.queryEntities('app="golembase-media_demo" && type="searches"');
+    const entities = await client.queryEntities(`app="${GOLEM_BASE_APP_NAME}" && type="searches"`);
     if (entities.length > 0) {
         
         // There should always be exactly one, but just in case...

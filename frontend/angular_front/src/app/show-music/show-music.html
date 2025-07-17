@@ -1,1 +1,3 @@
-<div>{{ music().title }} (music by {{ music().artist }})</div>
+<div class="list-item">
+	<a [routerLink]="['/music', music().key]" [state]="{ data: music() }">{{ music().title }} (music by {{ music().artist }})</a>
+</div>

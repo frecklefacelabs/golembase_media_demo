@@ -1,6 +1,17 @@
+/* 1. Import the 'Inter' font from the Google Fonts API */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+/* 2. Apply the font to the entire document */
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /*
   Base styles for all action buttons
 */
+
 .action-button {
   display: inline-block;
   padding: 10px 20px;
@@ -58,4 +69,16 @@
   margin-top: 20px;
   border-top: 1px solid #eee;
   padding-top: 20px;
+}
+
+nav {
+  margin:0.6em;
+}
+
+.container {
+  .list-item {
+    font-size:1.2em;
+    margin-bottom:0.4em;
+    margin-left:1em;
+  }
 }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, MediaItem, Searches, getItemByEntityKey } from './dataService.js';
+import { GOLEM_BASE_APP_NAME, sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, MediaItem, Searches, getItemByEntityKey } from './dataService.js';
 import cors from 'cors';
 import { Hex } from 'golem-base-sdk';
 const app = express();
@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 app.get('/load-data', async (req, res) => {
     // Add try-catch and send a simple message about not having enough funds
     await sendSampleData()
-    res.send('OK');
+    res.send({"status": "OK"});
 });
 
 // Save a new media item
@@ -59,9 +59,12 @@ app.get('/query', async (req, res) => {
         }
     }
 
-    let queryString:string = 'app="golembase-media_demo"';
+    console.log('Building query string');
+    let queryString:string = `app="${GOLEM_BASE_APP_NAME}"`;
+    console.log(queryString);
     for (let key in queryMap) {
         let value:any = queryMap[key];
+        console.log(value);
 
         if (typeof(value) == 'number') {
             queryString += ' && ' + `${key}=${value}`;

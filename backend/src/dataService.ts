@@ -20,7 +20,7 @@ import {
 import { readFileSync } from "fs";
 import jsonData from './data.json' with { type: 'json' };
 
-const GOLEM_BASE_APP_NAME = 'golembase-media_demo_v0.5';
+export const GOLEM_BASE_APP_NAME = 'golembase-media_demo_v0.5';
 
 // TODO: Move interfaces to their own file
 
@@ -297,13 +297,17 @@ export const getItemByEntityKey = async (hash: Hex) => {
 }
 
 export const query = async (queryString: string) => {
+    console.log('Querying...');
+    console.log(queryString);
     const rawResult: any = await client.queryEntities(queryString);
 
     // This part is annoying; we have to decode every payload.
     let result:QueryResult[] = [];
 
     for (let i=0; i<rawResult.length; i++) {
+        console.log(i);
         const metadata: any = await getItemByEntityKey(rawResult[i].entityKey);
+        console.log(metadata);
         let item:QueryResult = {
             key: rawResult[i].entityKey,
             auto_generated: decoder.decode(rawResult[i].storageValue),

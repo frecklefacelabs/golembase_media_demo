@@ -1,10 +1,11 @@
 import { Component, input } from '@angular/core';
 import { Api } from '../api';
 import { Music } from '../media';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-show-music',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './show-music.html',
   styleUrl: './show-music.css'
 })

@@ -1,12 +1,12 @@
 <div class="container">
 
-	<h1>Welcome to your Media Library</h1>
 
-	<div>
-		<a routerLink="/query" class="action-button">Build a Query 🔍</a>
-		<a routerLink="/add" class="action-button">Add Media ➕</a>
-	</div>
-	
+	@if (!demoDataPresent) {
+		<div>
+			Demo data not present.
+			<button (click)="loadDemoData()">Load Demo Data</button>
+		</div>
+	}
 
 	@for (mediaItem of mediaList(); track mediaItem.key) {
 		@switch (mediaItem.type) {

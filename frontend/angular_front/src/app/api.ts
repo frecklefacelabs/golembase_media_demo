@@ -11,6 +11,10 @@ export class Api {
 
     constructor (private http: HttpClient) { }
 
+    loadDemoDataIntoGolem(): Observable<string> {
+        return this.http.get<string>(`${this.apiUrl}/load-data`);
+    }
+
     getByKey(key: string): Observable<MediaItem> {
         return this.http.get<MediaItem>(`${this.apiUrl}/key/${key}`);
     }

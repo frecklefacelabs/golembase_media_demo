@@ -9,11 +9,13 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-list-media',
-  imports: [ ShowBook, ShowMusic, ShowMovie, RouterLink],
+  imports: [ ShowBook, ShowMusic, ShowMovie],
   templateUrl: './list-media.html',
   styleUrl: './list-media.css'
 })
 export class ListMedia {
+
+    public demoDataPresent = false;
 
     public mediaList = signal<MediaItem[]>([]);
 
@@ -23,12 +25,24 @@ export class ListMedia {
         this.loadMedia()
     }
 
+    loadDemoData() {
+        this.apiService.loadDemoDataIntoGolem().subscribe({
+            next:(str) => {
+                // After demo data is loaded into Golem, try again
+                this.loadMedia();
+            }
+        });
+    }
+
     loadMedia() {
         this.apiService.getAll().subscribe({
             next: (data) => {
+
                 this.mediaList.set(data);
-                console.log('Loaded:');
+                console.log('Demo data:')
                 console.log(data);
+
+                this.demoDataPresent = data && data.length > 0;
             },
             error: (err) => { // todo - display a friendly error on the page
                 console.log('Error loading media: ', err)

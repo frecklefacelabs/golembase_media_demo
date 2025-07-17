@@ -1,10 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ListMedia } from './list-media/list-media'
+import { RouterOutlet, RouterLink  } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ListMedia],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

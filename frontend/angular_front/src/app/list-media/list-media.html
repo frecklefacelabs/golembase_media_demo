@@ -9,17 +9,23 @@
 	}
 
 	@for (mediaItem of mediaList(); track mediaItem.key) {
+		<div class="list-item">
+		<a [routerLink]="['/', mediaItem.type, mediaItem.key]" [state]="{ data: mediaItem }">
+			{{ mediaItem.title }}
+		</a>
+		
 		@switch (mediaItem.type) {
 			@case ('book') {
-				<app-show-book [book]="mediaItem" />
-			}
-			@case ('music') {
-				<app-show-music [music]="mediaItem"/>
+			<span class="creator-info"> (book by {{ mediaItem.author }})</span>
 			}
 			@case ('movie') {
-				<app-show-movie [movie]="mediaItem"/>
+			<span class="creator-info"> (movie by {{ mediaItem.director }})</span>
+			}
+			@case ('music') {
+			<span class="creator-info"> (music by {{ mediaItem.artist }})</span>
 			}
 		}
+		</div>
 	}
-
+	
 </div>

@@ -2,14 +2,12 @@ import { Component, signal } from '@angular/core';
 import { Api } from '../api';
 import { MediaItem } from '../media';
 import { isNgContainer } from '@angular/compiler';
-import { ShowBook } from '../show-book/show-book'
-import { ShowMusic } from '../show-music/show-music'
-import { ShowMovie } from '../show-movie/show-movie'
 import { RouterLink } from '@angular/router';
+import { ShowMediaDetailsComponent } from '../show-media-details/show-media-details';
 
 @Component({
   selector: 'app-list-media',
-  imports: [ ShowBook, ShowMusic, ShowMovie],
+  imports: [ RouterLink ],
   templateUrl: './list-media.html',
   styleUrl: './list-media.css'
 })

@@ -1,5 +1,5 @@
 import express from 'express';
-import { GOLEM_BASE_APP_NAME, sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, getItemByEntityKey } from './dataService.js';
+import { GOLEM_BASE_APP_NAME, sendSampleData, query, getSearchEntity, getMetadata, createOrUpdateMediaItem, getItemByEntityKey } from './dataService.js';
 import cors from 'cors';
 import { Hex } from 'golem-base-sdk';
 import { MediaItem, Searches } from './media.js';
@@ -32,10 +32,10 @@ app.post('/save', async (req, res) => {
 
     // If the request has a key already with it, it's an update.
     if (req.body.key) {
-        result = await addMediaItem(req.body, req.body.key);
+        result = await createOrUpdateMediaItem(req.body, req.body.key);
     }
     else {
-        result = await addMediaItem(req.body);
+        result = await createOrUpdateMediaItem(req.body);
     }
     res.send(result);
 });
@@ -108,44 +108,6 @@ app.get('/test', async (req, res) => {
     res.send(await getSearchEntity());
     //await getMetadata("0x834ffe2a1604d8bfa20c7a52f4533b118b4e5eafa907b3b413db836c045b84ee");
 })
-
-app.get('/test2', async(req, res) => {
-
-    let newData: MediaItem = 
-    {
-        "type": "book",
-        "title": "The Moon is a Harsh Mistress",
-        "description": "A lunar revolution with libertarian flair",
-        "author": "Robert A. Heinlein",
-        "genre": "sci-fi",
-        "rating": 5,
-        "owned": true,
-        "year": 1966
-    };
-    /*{
-        "type": "book",
-        "title": "Farmer in the Sky",
-        "description": "Juvenile sci-fi adventure of colonists on Ganymede",
-        "author": "Robert A. Heinlein",
-        "genre": "sci-fi",
-        "rating": 4,
-        "owned": false,
-        "year": 1950
-    };*/
-
-    console.log('Calling addMediaItem...');
-
-    let result: any = await addMediaItem(newData);
-    console.log('Back form addMediaItem... Result is:');
-    console.log(result);
-    res.send(result);
-
-})
-
-app.get('/test3', async (req, res) => {
-    res.send(await getMetadata("0xa961bebcca22335289830b1a488b6cfb37ee1f9016feee75664945cc6e1a724c"));
-})
-
 
 // Start server
 app.listen(port, () => {

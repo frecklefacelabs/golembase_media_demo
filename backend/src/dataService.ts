@@ -144,9 +144,7 @@ export const sendSampleData = async () => {
     return 10;
 }
 
-// Add Entity
-
-export const addMediaItem = async (mediaItem: MediaItem, updateKey?: Hex) => {
+export const createOrUpdateMediaItem = async (mediaItem: MediaItem, updateKey?: Hex) => {
     // Convert to a CreateEntity item
     let creates:GolemBaseCreate[] = [];
     let updates:GolemBaseUpdate[] = [];

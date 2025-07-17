@@ -45,11 +45,17 @@
   </div>
 </form>
 
-<div class="results-area">
-  @if (queryResult()) {
-    <h3>Raw JSON Result:</h3>
+
+<div class="results-container">
+  @if (queryResults(); as results) {
+    <h2>{{ results.length }} Results Found</h2>
     
-    <pre><code>{{ queryResult() | json }}</code></pre>
+    <div class="results-list">
+      @for (item of results; track item.key) {
+        <app-show-media-details [itemInput]="item" />
+      }
+    </div>
   }
 </div>
+
 

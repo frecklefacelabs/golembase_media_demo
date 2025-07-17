@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { SearchOptions } from '../media';
+import { MediaItem, SearchOptions } from '../media';
 import { Api } from '../api';
+import { ShowMediaDetailsComponent } from '../show-media-details/show-media-details';
 
 @Component({
   selector: 'app-query-builder',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ShowMediaDetailsComponent],
   templateUrl: './query-builder.html',
   styleUrl: './query-builder.css'
 })
@@ -16,7 +17,8 @@ export class QueryBuilder {
 
   public searchOptions = signal<SearchOptions | null>(null);
   public queryForm: FormGroup;
-  public queryResult = signal<any | null>(null);
+  //public queryResult = signal<any | null>(null);
+  public queryResults = signal<MediaItem[] | null>(null);
 
   constructor() {
     // Initialize the form structure
@@ -110,7 +112,7 @@ export class QueryBuilder {
     this.apiService.executeQuery(queryString).subscribe({
       next: (results) => {
         console.log('API Response from /search-options:', results);
-        this.queryResult.set(results);
+        this.queryResults.set(results);
       },
       error: (err) => {
         console.error('Error fetching search options:', err);

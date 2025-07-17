@@ -1,7 +1,8 @@
 import express from 'express';
-import { GOLEM_BASE_APP_NAME, sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, MediaItem, Searches, getItemByEntityKey } from './dataService.js';
+import { GOLEM_BASE_APP_NAME, sendSampleData, query, getSearchEntity, getMetadata, addMediaItem, getItemByEntityKey } from './dataService.js';
 import cors from 'cors';
 import { Hex } from 'golem-base-sdk';
+import { MediaItem, Searches } from './media.js';
 const app = express();
 const port = 3000;
 

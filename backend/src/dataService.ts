@@ -19,57 +19,9 @@ import {
 } from "golem-base-sdk"
 import { readFileSync } from "fs";
 import jsonData from './data.json' with { type: 'json' };
+import { MediaItem, MediaType, Searches } from "./media";
 
 export const GOLEM_BASE_APP_NAME = 'golembase-media_demo_v0.5';
-
-// TODO: Move interfaces to their own file
-
-export type MediaType = "book" | "movie" | "music";
-
-export interface Book {
-  type: "book";
-  title: string;
-  description: string;
-  author: string;
-  genre: string;
-  rating: number;
-  owned: boolean;
-  year: number;
-}
-
-export interface Movie {
-  type: "movie";
-  title: string;
-  description: string;
-  director: string;
-  genre: string;
-  rating: number;
-  watched: boolean;
-  year: number;
-}
-
-export interface Music {
-  type: "music";
-  title: string;
-  description: string;
-  artist: string;
-  genre: string;
-  rating: number;
-  favorite: boolean;
-  year: number;
-}
-
-export type MediaItem = Book | Movie | Music;
-
-export interface Searches {
-    entityKey?: Hex; 
-    directors: string[];
-    artists: string[];
-    authors: string[];
-    movie_genres: string[];
-    music_genres: string[];
-    book_genres: string[];
-}
 
 // Mapping from media type to the person + genre keys. This way we can add additional media types later on without having to make major rewrites
 const MEDIA_MAP: Record<MediaType, { personKey: keyof Searches; genreKey: keyof Searches; sourcePersonField: string }> = {
@@ -153,7 +105,7 @@ export const sendSampleData = async () => {
     let creates:GolemBaseCreate[] = [];
 
     for (let i = 0; i < jsonData.length; i++) {
-        creates.push(convertToCreate(jsonData[i]));
+        creates.push(convertToCreateOrUpdate(jsonData[i]));
     }
     
     // Gather up authors, directors, artists, book-genres, movie-genres, music-genres so we can provide some search dropdowns
@@ -201,10 +153,10 @@ export const addMediaItem = async (mediaItem: MediaItem, updateKey?: Hex) => {
 
     // TODO: Verify schema
     if (updateKey) {
-        updates.push(convertToCreate(mediaItem, updateKey) as GolemBaseUpdate);
+        updates.push(convertToCreateOrUpdate(mediaItem, updateKey) as GolemBaseUpdate);
     }
     else {
-        creates.push(convertToCreate(mediaItem));
+        creates.push(convertToCreateOrUpdate(mediaItem));
     }
 
     // Grab the current Searches entity
@@ -239,7 +191,7 @@ export const addMediaItem = async (mediaItem: MediaItem, updateKey?: Hex) => {
 
 }
 
-export const convertToCreate = (mediaItem: any, updateKey?: Hex) => {
+export const convertToCreateOrUpdate = (mediaItem: any, updateKey?: Hex) => {
 
     // Construct the data value from the type, name, and description
 

@@ -1,0 +1,48 @@
+@if (mediaItem(); as item) {
+  <h2>{{ item.type | titlecase }} Details</h2>
+
+  <table>
+    <tbody>
+      <tr>
+        <td>Title</td>
+        <td>{{ item.title }}</td>
+      </tr>
+
+      @switch (item.type) {
+        @case ('book') { <tr><td>Author</td><td>{{ item.author }}</td></tr> }
+        @case ('movie') { <tr><td>Director</td><td>{{ item.director }}</td></tr> }
+        @case ('music') { <tr><td>Artist</td><td>{{ item.artist }}</td></tr> }
+      }
+
+      <tr>
+        <td>Description</td>
+        <td>{{ item.description }}</td>
+      </tr>
+      <tr>
+        <td>Genre</td>
+        <td>{{ item.genre }}</td>
+      </tr>
+      <tr>
+        <td>Rating</td>
+        <td>{{ item.rating }} / 10</td>
+      </tr>
+      <tr>
+        <td>Year</td>
+        <td>{{ item.year }}</td>
+      </tr>
+
+      @switch (item.type) {
+        @case ('book') { <tr><td>Owned</td><td>{{ item.owned ? 'Yes' : 'No' }}</td></tr> }
+        @case ('movie') { <tr><td>Watched</td><td>{{ item.watched ? 'Yes' : 'No' }}</td></tr> }
+        @case ('music') { <tr><td>Favorite</td><td>{{ item.favorite ? 'Yes' : 'No' }}</td></tr> }
+      }
+    </tbody>
+  </table>
+
+  <a [routerLink]="['/', item.type, item.key, 'edit']" [state]="{ data: item }" class="action-button">
+    Edit 📝
+  </a>
+
+} @else {
+  <div>Loading...</div>
+}

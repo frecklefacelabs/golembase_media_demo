@@ -194,12 +194,18 @@ export const sendSampleData = async () => {
 
 // Add Entity
 
-export const addMediaItem = async (mediaItem: MediaItem) => {
+export const addMediaItem = async (mediaItem: MediaItem, updateKey?: Hex) => {
     // Convert to a CreateEntity item
     let creates:GolemBaseCreate[] = [];
+    let updates:GolemBaseUpdate[] = [];
 
     // TODO: Verify schema
-    creates.push(convertToCreate(mediaItem));
+    if (updateKey) {
+        updates.push(convertToCreate(mediaItem, updateKey) as GolemBaseUpdate);
+    }
+    else {
+        creates.push(convertToCreate(mediaItem));
+    }
 
     // Grab the current Searches entity
 
@@ -214,16 +220,17 @@ export const addMediaItem = async (mediaItem: MediaItem) => {
     // TODO: I'm already omitting entityKey in the transform function, so no reason for this
     const entityKey = searches.entityKey;
     delete searches.entityKey;
-    let updates:GolemBaseUpdate[] = [{
+
+    let searchesUpdate:GolemBaseUpdate = {
         entityKey: entityKey as Hex,
         data: encoder.encode('searches'),
         btl: 25,
         stringAnnotations: transformSearchesToKeyValuePairs(searches),
         numericAnnotations: []
-
-    }];
-    updates[0].stringAnnotations.push(new Annotation("app", GOLEM_BASE_APP_NAME));
-    updates[0].stringAnnotations.push(new Annotation("type", "searches"));
+    }
+    searchesUpdate.stringAnnotations.push(new Annotation("app", GOLEM_BASE_APP_NAME));
+    searchesUpdate.stringAnnotations.push(new Annotation("type", "searches"));
+    updates.push(searchesUpdate);
 
     // Send both the Create and the Update as a single transaction
     const receipt = await client.sendTransaction(creates, updates, [], []);
@@ -232,7 +239,7 @@ export const addMediaItem = async (mediaItem: MediaItem) => {
 
 }
 
-export const convertToCreate = (mediaItem: any) => {
+export const convertToCreate = (mediaItem: any, updateKey?: Hex) => {
 
     // Construct the data value from the type, name, and description
 
@@ -241,12 +248,25 @@ export const convertToCreate = (mediaItem: any) => {
     const data_value:any = `${mediaItem?.type?.toUpperCase()}: ${mediaItem?.title} - ${mediaItem?.description}`;
     console.log(data_value);
 
-    let result:GolemBaseCreate = {
-        data: data_value,
-        btl: 25,
-        stringAnnotations: [new Annotation("app", GOLEM_BASE_APP_NAME)],
-        numericAnnotations: []
-    };
+    let result:GolemBaseCreate|GolemBaseUpdate;
+
+    if (updateKey) {
+        result = {
+            entityKey: updateKey,
+            data: data_value,
+            btl: 25,
+            stringAnnotations: [new Annotation("app", GOLEM_BASE_APP_NAME)],
+            numericAnnotations: []
+        }
+    }
+    else {
+        result = {
+            data: data_value,
+            btl: 25,
+            stringAnnotations: [new Annotation("app", GOLEM_BASE_APP_NAME)],
+            numericAnnotations: []
+        }
+    }
 
     for (const key of Object.keys(mediaItem)) {
         const value = (mediaItem as any)[key];

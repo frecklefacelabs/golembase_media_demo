@@ -24,10 +24,18 @@ app.get('/load-data', async (req, res) => {
 });
 
 // Save a new media item
-app.post('/save-new', async (req, res) => {
+app.post('/save', async (req, res) => {
     // TODO: Verify data before blindly sending it
-    console.log(req.body);
-    let result: any = await addMediaItem(req.body);
+
+    let result:any;
+
+    // If the request has a key already with it, it's an update.
+    if (req.body.key) {
+        result = await addMediaItem(req.body, req.body.key);
+    }
+    else {
+        result = await addMediaItem(req.body);
+    }
     res.send(result);
 });
 

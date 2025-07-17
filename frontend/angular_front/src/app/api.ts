@@ -45,6 +45,6 @@ export class Api {
 
     save(item: MediaItem): Observable<any> {
         // This will POST the complete object to a /media endpoint
-        return this.http.post<any>(`${this.apiUrl}/save-new`, item);
+        return this.http.post<any>(`${this.apiUrl}/save`, item);
     }
 }

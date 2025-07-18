@@ -1,5 +1,5 @@
 import express from 'express';
-import { GOLEM_BASE_APP_NAME, sendSampleData, query, getSearchEntity, getMetadata, createOrUpdateMediaItem, getItemByEntityKey } from './dataService.js';
+import { GOLEM_BASE_APP_NAME, sendSampleData, query, getSearchEntity, getMetadata, createOrUpdateMediaItem, getItemByEntityKey, purge } from './dataService.js';
 import cors from 'cors';
 import { Hex } from 'golem-base-sdk';
 import { MediaItem, Searches } from './media.js';
@@ -89,6 +89,12 @@ app.get('/query', async (req, res) => {
     res.send(result);
 })
 
+app.get('/purge', async (req, res) => {
+
+    res.send(await purge());
+
+});
+
 app.get('/key/:id', async (req, res) => {
 
     let id:string = req.params.id;
@@ -102,11 +108,6 @@ app.get('/key/:id', async (req, res) => {
     console.log('Loading by key!');
     console.log('id is:', req.params.id);
     res.send(await getItemByEntityKey(req.params.id as Hex));
-})
-
-app.get('/test', async (req, res) => {
-    res.send(await getSearchEntity());
-    //await getMetadata("0x834ffe2a1604d8bfa20c7a52f4533b118b4e5eafa907b3b413db836c045b84ee");
 })
 
 // Start server

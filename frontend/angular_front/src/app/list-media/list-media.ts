@@ -47,5 +47,13 @@ export class ListMedia {
             }
         })
     }
+
+    purgeData() {
+        this.apiService.purge().subscribe({
+            next: (data) => {
+                this.loadMedia();
+            }
+        })
+    }
 }
 

@@ -47,4 +47,8 @@ export class Api {
         // This will POST the complete object to a /media endpoint
         return this.http.post<any>(`${this.apiUrl}/save`, item);
     }
+
+    purge(): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}/purge`)
+    }
 }

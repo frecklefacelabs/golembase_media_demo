@@ -27,5 +27,12 @@
 		}
 		</div>
 	}
+
+	@if (demoDataPresent) {
+		<div>
+			<button (click)="purgeData()">Purge Data</button>
+		</div>
+	}
+
 	
 </div>

@@ -47,7 +47,7 @@ const decoder = new TextDecoder();
 const keyBytes = readFileSync('./private.key');
 const key: AccountData = new Tagged("privatekey", keyBytes);
 const client = await createClient(1337, key, 'http://localhost:8545', 'ws://localhost:8545');
-
+//const client = await createClient(600606, key, 'https://rpc.kaolin.holesky.golem-base.io', 'wss://ws.rpc.kaolin.holesky.golem-base.io');
 
 // This takes an existing Searches (a set of lists), and adds in additional items, but checks for existence first, and only adds if they aren't already there
 // We also use the above so we're not hardcoding "director" "movie_genre" etc. in case we want to add additional media types later.
@@ -142,6 +142,21 @@ export const sendSampleData = async () => {
     console.log(receipts);
 
     return 10;
+}
+
+export const purge = async() => {
+    // First query all with the current golem app id
+
+    let queryString = `app="${GOLEM_BASE_APP_NAME}"`;
+    console.log(queryString);
+    const result:any = await client.queryEntities(queryString);
+    const keys = result.map((item: any) => {
+        return item.entityKey;
+    })
+
+    await client.deleteEntities(keys);
+    return result;
+
 }
 
 export const createOrUpdateMediaItem = async (mediaItem: MediaItem, updateKey?: Hex) => {

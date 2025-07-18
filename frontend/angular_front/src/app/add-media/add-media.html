@@ -1,0 +1,86 @@
+<h2>Add New Media Item</h2>
+
+<form [formGroup]="addMediaForm" (ngSubmit)="saveMedia()" class="add-media-container">
+
+  <div class="form-row">
+    <label for="type">Type:</label>
+    <select formControlName="type" id="type">
+      <option value="Book">Book</option>
+      <option value="Movie">Movie</option>
+      <option value="Music">Music</option>
+    </select>
+  </div>
+
+  @switch (selectedType) {
+    @case ('Book') {
+      <div class="form-row">
+        <label for="title">Title:</label>
+        <input id="title" formControlName="title">
+      </div>
+      <div class="form-row">
+        <label for="author">Author:</label>
+        <input id="author" formControlName="author">
+      </div>
+    }
+    @case ('Movie') {
+      <div class="form-row">
+        <label for="title">Title:</label>
+        <input id="title" formControlName="title">
+      </div>
+      <div class="form-row">
+        <label for="director">Director:</label>
+        <input id="director" formControlName="director">
+      </div>
+    }
+    @case ('Music') {
+      <div class="form-row">
+        <label for="title">Title:</label>
+        <input id="title" formControlName="title">
+      </div>
+      <div class="form-row">
+        <label for="artist">Artist:</label>
+        <input id="artist" formControlName="artist">
+      </div>
+    }
+  }
+
+  <div class="form-row">
+    <label for="description">Description:</label>
+    <textarea id="description" formControlName="description" rows="4"></textarea>
+  </div>
+  <div class="form-row">
+    <label for="genre">Genre:</label>
+    <input id="genre" formControlName="genre">
+  </div>
+  <div class="form-row">
+    <label for="rating">Rating (0-10):</label>
+    <input id="rating" type="number" formControlName="rating">
+  </div>
+  <div class="form-row">
+    <label for="year">Year:</label>
+    <input id="year" type="number" formControlName="year">
+  </div>
+  
+  @switch (selectedType) {
+    @case ('Book') {
+      <div class="form-row-inline">
+        <input id="owned" type="checkbox" formControlName="owned">
+        <label for="owned">Owned</label>
+      </div>
+    }
+    @case ('Movie') {
+      <div class="form-row-inline">
+        <input id="watched" type="checkbox" formControlName="watched">
+        <label for="watched">Watched</label>
+      </div>
+    }
+    @case ('Music') {
+      <div class="form-row-inline">
+        <input id="favorite" type="checkbox" formControlName="favorite">
+        <label for="favorite">Favorite</label>
+      </div>
+    }
+  }
+
+  <button type="submit" class="action-button" [disabled]="!addMediaForm.valid">Save Media</button>
+</form>

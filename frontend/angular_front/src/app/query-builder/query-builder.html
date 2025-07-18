@@ -1,0 +1,61 @@
+<h2>Query Builder</h2>
+
+<form [formGroup]="queryForm" (ngSubmit)="executeQuery()" class="query-container">
+  
+  <div class="query-row">
+    <select formControlName="type" class="query-select">
+      <option>Movie</option>
+      <option>Book</option>
+      <option>Music</option>
+    </select>
+  </div>
+
+  <div formArrayName="criteria">
+    @for (criterion of criteria.controls; track $index) {
+      <div [formGroupName]="$index" class="query-row">
+        
+        <select formControlName="field" class="query-select">
+          <option value="">-- Select Field --</option>
+          @for (field of getFieldOptions(); track field) {
+            <option [value]="field">{{ field }}</option>
+          }
+        </select>
+        
+        <span class="operator">=</span>
+
+        @if (criterion.value.field === 'Year') {
+          <input type="number" formControlName="value" placeholder="Enter Year" class="query-input">
+        } @else {
+          <select formControlName="value" class="query-select">
+            <option value="">-- Select Value --</option>
+            @for (value of getValueOptions(criterion); track value) {
+              <option [value]="value">{{ value }}</option>
+            }
+          </select>
+        }
+
+        <button type="button" (click)="removeCriterion($index)" class="delete-btn">❌</button>
+      </div>
+    }
+  </div>
+
+  <div class="action-buttons">
+    <button type="button" class="action-btn" (click)="addCriterion()">And</button>
+    <button type="submit" class="action-btn go-btn">Go</button>
+  </div>
+</form>
+
+
+<div class="results-container">
+  @if (queryResults(); as results) {
+    <h2>{{ results.length }} Results Found</h2>
+    
+    <div class="results-list">
+      @for (item of results; track item.key) {
+        <app-show-media-details [itemInput]="item" />
+      }
+    </div>
+  }
+</div>
+
+

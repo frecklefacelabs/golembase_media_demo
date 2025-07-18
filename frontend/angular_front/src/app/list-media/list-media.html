@@ -1,0 +1,38 @@
+<div class="container">
+
+
+	@if (!demoDataPresent) {
+		<div>
+			Demo data not present.
+			<button (click)="loadDemoData()">Load Demo Data</button>
+		</div>
+	}
+
+	@for (mediaItem of mediaList(); track mediaItem.key) {
+		<div class="list-item">
+		<a [routerLink]="['/', mediaItem.type, mediaItem.key]" [state]="{ data: mediaItem }">
+			{{ mediaItem.title }}
+		</a>
+		
+		@switch (mediaItem.type) {
+			@case ('book') {
+			<span class="creator-info"> (book by {{ mediaItem.author }})</span>
+			}
+			@case ('movie') {
+			<span class="creator-info"> (movie by {{ mediaItem.director }})</span>
+			}
+			@case ('music') {
+			<span class="creator-info"> (music by {{ mediaItem.artist }})</span>
+			}
+		}
+		</div>
+	}
+
+	@if (demoDataPresent) {
+		<div>
+			<button (click)="purgeData()">Purge Data</button>
+		</div>
+	}
+
+	
+</div>

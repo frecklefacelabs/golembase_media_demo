@@ -19,56 +19,9 @@ import {
 } from "golem-base-sdk"
 import { readFileSync } from "fs";
 import jsonData from './data.json' with { type: 'json' };
-//import { decode } from "punycode";
+import { MediaItem, MediaType, Searches } from "./media";
 
-// TODO: Move interfaces to their own file
-
-export type MediaType = "book" | "movie" | "music";
-
-export interface Book {
-  type: "book";
-  title: string;
-  description: string;
-  author: string;
-  genre: string;
-  rating: number;
-  owned: boolean;
-  year: number;
-}
-
-export interface Movie {
-  type: "movie";
-  title: string;
-  description: string;
-  director: string;
-  genre: string;
-  rating: number;
-  watched: boolean;
-  year: number;
-}
-
-export interface Music {
-  type: "music";
-  title: string;
-  description: string;
-  artist: string;
-  genre: string;
-  rating: number;
-  favorite: boolean;
-  year: number;
-}
-
-export type MediaItem = Book | Movie | Music;
-
-export interface Searches {
-    entityKey?: Hex; 
-    directors: string[];
-    artists: string[];
-    authors: string[];
-    movie_genres: string[];
-    music_genres: string[];
-    book_genres: string[];
-}
+export const GOLEM_BASE_APP_NAME = 'golembase-media_demo_v0.5';
 
 // Mapping from media type to the person + genre keys. This way we can add additional media types later on without having to make major rewrites
 const MEDIA_MAP: Record<MediaType, { personKey: keyof Searches; genreKey: keyof Searches; sourcePersonField: string }> = {
@@ -94,7 +47,7 @@ const decoder = new TextDecoder();
 const keyBytes = readFileSync('./private.key');
 const key: AccountData = new Tagged("privatekey", keyBytes);
 const client = await createClient(1337, key, 'http://localhost:8545', 'ws://localhost:8545');
-
+//const client = await createClient(600606, key, 'https://rpc.kaolin.holesky.golem-base.io', 'wss://ws.rpc.kaolin.holesky.golem-base.io');
 
 // This takes an existing Searches (a set of lists), and adds in additional items, but checks for existence first, and only adds if they aren't already there
 // We also use the above so we're not hardcoding "director" "movie_genre" etc. in case we want to add additional media types later.
@@ -152,7 +105,7 @@ export const sendSampleData = async () => {
     let creates:GolemBaseCreate[] = [];
 
     for (let i = 0; i < jsonData.length; i++) {
-        creates.push(convertToCreate(jsonData[i]));
+        creates.push(convertToCreateOrUpdate(jsonData[i]));
     }
     
     // Gather up authors, directors, artists, book-genres, movie-genres, music-genres so we can provide some search dropdowns
@@ -179,7 +132,7 @@ export const sendSampleData = async () => {
         numericAnnotations: []
     };
 
-    searches.stringAnnotations.push(new Annotation("app", "golembase-media_demo"));
+    searches.stringAnnotations.push(new Annotation("app", GOLEM_BASE_APP_NAME));
     searches.stringAnnotations.push(new Annotation("type", "searches"));
 
     creates.push(searches)
@@ -191,14 +144,33 @@ export const sendSampleData = async () => {
     return 10;
 }
 
-// Add Entity
+export const purge = async() => {
+    // First query all with the current golem app id
 
-export const addMediaItem = async (mediaItem: MediaItem) => {
+    let queryString = `app="${GOLEM_BASE_APP_NAME}"`;
+    console.log(queryString);
+    const result:any = await client.queryEntities(queryString);
+    const keys = result.map((item: any) => {
+        return item.entityKey;
+    })
+
+    await client.deleteEntities(keys);
+    return result;
+
+}
+
+export const createOrUpdateMediaItem = async (mediaItem: MediaItem, updateKey?: Hex) => {
     // Convert to a CreateEntity item
     let creates:GolemBaseCreate[] = [];
+    let updates:GolemBaseUpdate[] = [];
 
     // TODO: Verify schema
-    creates.push(convertToCreate(mediaItem));
+    if (updateKey) {
+        updates.push(convertToCreateOrUpdate(mediaItem, updateKey) as GolemBaseUpdate);
+    }
+    else {
+        creates.push(convertToCreateOrUpdate(mediaItem));
+    }
 
     // Grab the current Searches entity
 
@@ -210,18 +182,20 @@ export const addMediaItem = async (mediaItem: MediaItem) => {
 
     // Create an Update with the Searches entity
     // TODO: Move this into its own function
+    // TODO: I'm already omitting entityKey in the transform function, so no reason for this
     const entityKey = searches.entityKey;
     delete searches.entityKey;
-    let updates:GolemBaseUpdate[] = [{
+
+    let searchesUpdate:GolemBaseUpdate = {
         entityKey: entityKey as Hex,
         data: encoder.encode('searches'),
         btl: 25,
         stringAnnotations: transformSearchesToKeyValuePairs(searches),
         numericAnnotations: []
-
-    }];
-    updates[0].stringAnnotations.push(new Annotation("app", "golembase-media_demo"));
-    updates[0].stringAnnotations.push(new Annotation("type", "searches"));
+    }
+    searchesUpdate.stringAnnotations.push(new Annotation("app", GOLEM_BASE_APP_NAME));
+    searchesUpdate.stringAnnotations.push(new Annotation("type", "searches"));
+    updates.push(searchesUpdate);
 
     // Send both the Create and the Update as a single transaction
     const receipt = await client.sendTransaction(creates, updates, [], []);
@@ -230,19 +204,34 @@ export const addMediaItem = async (mediaItem: MediaItem) => {
 
 }
 
-export const convertToCreate = (mediaItem: any) => {
+export const convertToCreateOrUpdate = (mediaItem: any, updateKey?: Hex) => {
 
     // Construct the data value from the type, name, and description
+
+    // TODO: Add in the auto_generated part... Or remove it completely?
 
     const data_value:any = `${mediaItem?.type?.toUpperCase()}: ${mediaItem?.title} - ${mediaItem?.description}`;
     console.log(data_value);
 
-    let result:GolemBaseCreate = {
-        data: data_value,
-        btl: 25,
-        stringAnnotations: [new Annotation("app", "golembase-media_demo")],
-        numericAnnotations: []
-    };
+    let result:GolemBaseCreate|GolemBaseUpdate;
+
+    if (updateKey) {
+        result = {
+            entityKey: updateKey,
+            data: data_value,
+            btl: 25,
+            stringAnnotations: [new Annotation("app", GOLEM_BASE_APP_NAME)],
+            numericAnnotations: []
+        }
+    }
+    else {
+        result = {
+            data: data_value,
+            btl: 25,
+            stringAnnotations: [new Annotation("app", GOLEM_BASE_APP_NAME)],
+            numericAnnotations: []
+        }
+    }
 
     for (const key of Object.keys(mediaItem)) {
         const value = (mediaItem as any)[key];
@@ -273,7 +262,9 @@ export const convertToCreate = (mediaItem: any) => {
 export const getItemByEntityKey = async (hash: Hex) => {
     const metadata: any = await client.getEntityMetaData(hash);
 
-    let result:any = {};
+    let result:any = {
+        key: hash
+    };
 
     for (let i=0; i<metadata.stringAnnotations.length; i++) {
         const key = metadata.stringAnnotations[i].key;
@@ -291,13 +282,17 @@ export const getItemByEntityKey = async (hash: Hex) => {
 }
 
 export const query = async (queryString: string) => {
+    console.log('Querying...');
+    console.log(queryString);
     const rawResult: any = await client.queryEntities(queryString);
 
     // This part is annoying; we have to decode every payload.
     let result:QueryResult[] = [];
 
     for (let i=0; i<rawResult.length; i++) {
+        console.log(i);
         const metadata: any = await getItemByEntityKey(rawResult[i].entityKey);
+        console.log(metadata);
         let item:QueryResult = {
             key: rawResult[i].entityKey,
             auto_generated: decoder.decode(rawResult[i].storageValue),
@@ -323,7 +318,7 @@ export const query = async (queryString: string) => {
 
 export const getSearchEntity = async(): Promise<Searches> => {
     // This is an example where for the "full" app we would also include userid or username in the query
-    const entities = await client.queryEntities('app="golembase-media_demo" && type="searches"');
+    const entities = await client.queryEntities(`app="${GOLEM_BASE_APP_NAME}" && type="searches"`);
     if (entities.length > 0) {
         
         // There should always be exactly one, but just in case...

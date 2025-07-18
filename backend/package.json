@@ -15,11 +15,13 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "golem-base-sdk": "^0.1.16",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.13",
     "ts-node": "^10.9.2",

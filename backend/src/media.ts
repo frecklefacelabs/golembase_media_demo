@@ -1,5 +1,7 @@
 import { Hex } from "golem-base-sdk";
 
+export const GOLEM_BASE_APP_NAME = 'golembase-media_demo_v0.5';
+
 export type MediaType = "book" | "movie" | "music";
 
 export interface Book {

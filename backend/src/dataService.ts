@@ -29,16 +29,15 @@ interface QueryResult {
     [key: string]: string | number;
 }
 
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
-
-
+// Read in key file and create client.
+// Tip: We're including both local version and kaolin testnet. Comment/Uncomment to choose.
 const keyBytes = readFileSync('./private.key');
 const key: AccountData = new Tagged("privatekey", keyBytes);
-//export const client = await createClient(1337, key, 'http://localhost:8545', 'ws://localhost:8545');
-export const client = await createClient(600606, key, 'https://rpc.kaolin.holesky.golem-base.io', 'wss://ws.rpc.kaolin.holesky.golem-base.io');
+export const client = await createClient(1337, key, 'http://localhost:8545', 'ws://localhost:8545');
+//export const client = await createClient(600606, key, 'https://rpc.kaolin.holesky.golem-base.io', 'wss://ws.rpc.kaolin.holesky.golem-base.io');
 
-
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
 
 export const getBlockNumber = async() => {
     return await client.getRawClient().httpClient.getBlockNumber()

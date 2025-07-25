@@ -1,8 +1,9 @@
 import express from 'express';
-import { GOLEM_BASE_APP_NAME, sendSampleData, query, getSearchEntity, getMetadata, createOrUpdateMediaItem, getItemByEntityKey, purge } from './dataService.js';
+import { sendSampleData, query, createOrUpdateMediaItem, getItemByEntityKey, purge, getBlockNumber } from './dataService.js';
 import cors from 'cors';
 import { Hex } from 'golem-base-sdk';
-import { MediaItem, Searches } from './media.js';
+import { GOLEM_BASE_APP_NAME, Searches } from './media.js';
+import { getSearchEntity } from './searches.js';
 const app = express();
 const port = 3000;
 
@@ -90,10 +91,14 @@ app.get('/query', async (req, res) => {
 })
 
 app.get('/purge', async (req, res) => {
-
     res.send(await purge());
-
 });
+
+app.get('/block-number', async (req, res) => {
+    const num = await getBlockNumber();
+    console.log(num);
+    res.send(num.toString());
+})
 
 app.get('/key/:id', async (req, res) => {
 

@@ -3,6 +3,7 @@
 import { Annotation, Hex } from "golem-base-sdk";
 import { GOLEM_BASE_APP_NAME, MediaItem, MediaType, Searches } from "./media.js";
 import { client } from "./dataService.js";
+import { transformAnnotationsToListPOJO, transformListPOJOToAnnotations } from "@freckleface/golembase-js-transformations";
 
 // Mapping from media type to the person + genre keys. This way we can add additional media types later on without having to make major rewrites
 const MEDIA_MAP: Record<MediaType, { personKey: keyof Searches; genreKey: keyof Searches; sourcePersonField: string }> = {
@@ -49,11 +50,12 @@ export const updateSearchesFromItem = (searches: Searches, item: MediaItem): voi
 }
 
 export const transformSearchesToKeyValuePairs = (searches: Omit<Searches, 'entityKey'>): Annotation<string>[] => {
-    return Object.entries(searches).map(([key, value]) => {
-        const finalKey = key; //.replace(/_/g, '-'); // turn underscores into dashes
-        const sortedValues = [...value].sort((a, b) => a.localeCompare(b));
-        return new Annotation(finalKey, sortedValues.join(','));
-    });
+
+    console.log('SEARCHES UPDATE:')
+    const result2: any = transformListPOJOToAnnotations(searches).stringAnnotations;
+    console.log(result2);
+    
+    return result2;
 }
 
 export const getSearchEntity = async(): Promise<Searches> => {
@@ -69,28 +71,17 @@ export const getSearchEntity = async(): Promise<Searches> => {
 
         console.log(metadata);
 
-        // TODO: Move this to a function and put the mapping functions in their own file
-        // Build the search options as a single object
-        // Let's use the built in reduce function to transform this into an object
-        // (Instead of harcoding "director", "author" etc. That way if we add 
-        // Additional media types later on, we won't have to change this code.)
-        const output:Searches = metadata.stringAnnotations.reduce(
-            (acc, {key, value}) => {
-                // Skip the app and type annotations but include all the rest
-                if (key == "app" || key == "type") {
-                    return acc;
-                }
-                acc[key] = value.split(',');
-                return acc;
-            },
-            {} as Record<string, string[]>
-        ) as unknown as Searches; // Those are just to get the TS compiler to shut up ;-)
+        const output: any = transformAnnotationsToListPOJO(metadata, false);
 
+        // Remove the app and type as we don't need it here
+        delete output.app;
+        delete output.type;
+
+        // Add in the entity key
         output.entityKey = search_hash;
-
+        console.log('SEARCHES:');
         console.log(output);
         return output;
-
     }
     return {} as Searches; // Again, to get TS to quiet down
 }

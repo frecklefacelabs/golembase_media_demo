@@ -18,6 +18,7 @@ import { readFileSync } from "fs";
 import jsonData from './data.json' with { type: 'json' };
 import { GOLEM_BASE_APP_NAME, MediaItem, MediaType, Searches } from "./media.js";
 import { getSearchEntity, transformSearchesToKeyValuePairs, updateSearchesFromItem } from "./searches.js";
+import { Annotations, transformAnnotationsToPOJO, transformPOJOToKeyValuePairs } from "@freckleface/golembase-js-transformations";
 
 interface QueryResult {
     key: string;
@@ -167,45 +168,25 @@ export const convertToCreateOrUpdate = (mediaItem: any, updateKey?: Hex) => {
 
     let result:GolemBaseCreate|GolemBaseUpdate;
 
+    const annots:Annotations = transformPOJOToKeyValuePairs(mediaItem);
+    annots.stringAnnotations.push(new Annotation("app", GOLEM_BASE_APP_NAME))
+
     if (updateKey) {
         result = {
             entityKey: updateKey,
             data: data_value,
             btl: 25,
-            stringAnnotations: [new Annotation("app", GOLEM_BASE_APP_NAME)],
-            numericAnnotations: []
+            stringAnnotations: annots.stringAnnotations,
+            numericAnnotations: annots.numericAnnotations
         }
     }
     else {
         result = {
             data: data_value,
             btl: 25,
-            stringAnnotations: [new Annotation("app", GOLEM_BASE_APP_NAME)],
-            numericAnnotations: []
+            stringAnnotations: annots.stringAnnotations,
+            numericAnnotations: annots.numericAnnotations
         }
-    }
-
-    for (const key of Object.keys(mediaItem)) {
-        const value = (mediaItem as any)[key];
-        if (typeof(value) == 'number') {
-            result.numericAnnotations.push(new Annotation(key, value));
-
-        }
-        else if (typeof(value) == 'string') {
-            result.stringAnnotations.push(new Annotation(key, value));
-        }
-        else {
-            let newValue = String(value);
-            if (String(value).toLowerCase() == 'true') {
-                newValue = 'true';
-            }
-            else if (String(value).toLowerCase() == 'false') {
-                newValue = 'false';
-            }
-            result.stringAnnotations.push(new Annotation(key, newValue));
-
-        }
-        //console.log(`Annotation ${key}:${value}, type of value; ${typeof(value)}`)
     }
 
     return result;
@@ -215,26 +196,10 @@ export const getItemByEntityKey = async (hash: Hex) => {
 
     // This function builds a "regular" flat JSON object
     // based on the data stored in the annotations.
-    // We simply loop through the annotations, grab the key
-    // and save the value into the object with that key as
-    // as a member.
     const metadata: any = await client.getEntityMetaData(hash);
 
-    let result:any = {
-        key: hash
-    };
-
-    for (let i=0; i<metadata.stringAnnotations.length; i++) {
-        const key = metadata.stringAnnotations[i].key;
-        const value = metadata.stringAnnotations[i].value;
-        result[key] = value;
-    }
-
-    for (let i=0; i<metadata.numericAnnotations.length; i++) {
-        const key = metadata.numericAnnotations[i].key;
-        const value = metadata.numericAnnotations[i].value;
-        result[key] = value;
-    }
+    let result: any = transformAnnotationsToPOJO(metadata, false);
+    result.key = hash;
 
     return result;
 }
@@ -273,8 +238,3 @@ export const query = async (queryString: string) => {
 
     return result;
 }
-
-// export const getMetadata = async(hash: Hex) => {
-//     const metadata = await client.getEntityMetaData(hash);
-//     console.log(metadata);
-// }
